@@ -5,12 +5,15 @@ case "$1" in
         cd /usr/bin
         scull_load
         module_load faulty
+        aesdchar_load
         modprobe hello
         ;;
     stop)
         echo "Unload ldd modules..."
+        rmmod aesdchar
         rmmod hello
         cd /usr/bin
+        aesdchar_unload
         module_unload faulty
         scull_unload
         ;;
