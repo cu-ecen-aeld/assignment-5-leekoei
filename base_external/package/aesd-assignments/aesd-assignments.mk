@@ -6,11 +6,11 @@
 ##############################################################
 
 #TODO: Fill up the contents below in order to reference your assignment 5 git contents
-AESD_ASSIGNMENTS_VERSION = 'bf522e9496a5778b8d31c1be75cb7f45842ae8c4'
+AESD_ASSIGNMENTS_VERSION = bf522e9496a5778b8d31c1be75cb7f45842ae8c4
 # Note: Be sure to reference the *ssh* repository URL here (not https) to work properly
 # with ssh keys and the automated build/test system.
 # Your site should start with git@github.com:
-AESD_ASSIGNMENTS_SITE = 'git@github.com:leekoei/aesd-assignment-leekoei.git'
+AESD_ASSIGNMENTS_SITE = git@github.com:leekoei/aesd-assignment-leekoei.git
 AESD_ASSIGNMENTS_SITE_METHOD = git
 AESD_ASSIGNMENTS_GIT_SUBMODULES = YES
 
@@ -26,7 +26,7 @@ define AESD_ASSIGNMENTS_INSTALL_TARGET_CMDS
 	$(INSTALL) -m 0755 $(@D)/server/aesdsocket  $(TARGET_DIR)/usr/bin
 	$(INSTALL) -m 0755 $(@D)/server/aesdsocket-start-stop $(TARGET_DIR)/etc/init.d/S99aesdsocket
 
-	$(INSTALL) -m 0644 $(@D)/aesd-char-driver/aesdchar.ko  $(TARGET_DIR)/lib/modules/$(LINUX_VERSION)/aesdchar.ko
+	$(INSTALL) -D -m 0644 $(@D)/aesd-char-driver/aesdchar.ko  $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/aesdchar.ko
 	$(INSTALL) -m 0644 $(@D)/aesd-char-driver/aesdchar.ko  $(TARGET_DIR)/usr/bin
 	$(INSTALL) -m 0755 $(@D)/aesd-char-driver/aesdchar_load $(TARGET_DIR)/usr/bin
 	$(INSTALL) -m 0755 $(@D)/aesd-char-driver/aesdchar_unload $(TARGET_DIR)/usr/bin

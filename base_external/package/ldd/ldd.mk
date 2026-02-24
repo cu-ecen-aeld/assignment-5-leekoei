@@ -5,8 +5,8 @@
 #
 ##############################################################
 
-LDD_VERSION = 'f4cb4bb28f2f8de2e3d91f5b175e43392b16b4a5'
-LDD_SITE = 'git@github.com:leekoei/aesd-assignment-leekoei.git'
+LDD_VERSION = f4cb4bb28f2f8de2e3d91f5b175e43392b16b4a5
+LDD_SITE = git@github.com:leekoei/aesd-assignment-leekoei.git
 LDD_SITE_METHOD = git
 LDD_GIT_SUBMODULES = YES
 
@@ -18,7 +18,7 @@ endef
 # TODO add your writer, finder and finder-test utilities/scripts to the installation steps below
 define LDD_INSTALL_TARGET_CMDS
 	# Load the kernel modules
-	$(INSTALL) -m 0644 $(@D)/misc-modules/hello.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION)/hello.ko
+	$(INSTALL) -D -m 0644 $(@D)/misc-modules/hello.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/hello.ko
 	$(INSTALL) -m 0644 $(@D)/misc-modules/faulty.ko $(TARGET_DIR)/usr/bin
 	$(INSTALL) -m 0644 $(@D)/scull/scull.ko $(TARGET_DIR)/usr/bin
 
