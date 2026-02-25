@@ -3,6 +3,23 @@
 #Host forwarding: Host Port 10022 ->> QEMU Port 22 
 #Author: Siddhant Jajoo.
 
+ROOTFS="buildroot/output/images/rootfs.ext4"
+if [ ! -e "${ROOTFS}" ]; then
+    ROOTFS="buildroot/output/images/rootfs.ext2"
+fi
+
+if [ ! -e "${ROOTFS}" ]; then
+    echo "No rootfs image found at buildroot/output/images/rootfs.ext4 or rootfs.ext2"
+    echo "Build first, then retry."
+    exit 1
+fi
+
+if [ ! -e "buildroot/output/images/Image" ]; then
+    echo "Kernel image not found at buildroot/output/images/Image"
+    echo "Build first, then retry."
+    exit 1
+fi
+
 
 qemu-system-aarch64 \
     -M virt  \
@@ -11,5 +28,5 @@ qemu-system-aarch64 \
     -append "rootwait root=/dev/vda console=ttyAMA0" \
     -netdev user,id=eth0,hostfwd=tcp::10022-:22,hostfwd=tcp::9000-:9000, \
     -device virtio-net-device,netdev=eth0 \
-    -drive file=buildroot/output/images/rootfs.ext4,if=none,format=raw,id=hd0 \
+    -drive file=${ROOTFS},if=none,format=raw,id=hd0 \
     -device virtio-blk-device,drive=hd0 -device virtio-rng-pci

@@ -18,7 +18,13 @@ endef
 # TODO add your writer, finder and finder-test utilities/scripts to the installation steps below
 define LDD_INSTALL_TARGET_CMDS
 	# Load the kernel modules
-	$(INSTALL) -D -m 0644 $(@D)/misc-modules/hello.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/hello.ko
+	$(INSTALL) -D -m 0644 $(@D)/misc-modules/hello.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION)/hello.ko
+	if [ "$(LINUX_VERSION_PROBED)" != "$(LINUX_VERSION)" ]; then \
+		$(INSTALL) -D -m 0644 $(@D)/misc-modules/hello.ko $(TARGET_DIR)/lib/modules/$(LINUX_VERSION_PROBED)/hello.ko ; \
+	fi
+	if [ -n "$(BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE)" ]; then \
+		$(INSTALL) -D -m 0644 $(@D)/misc-modules/hello.ko $(TARGET_DIR)/lib/modules/$(BR2_LINUX_KERNEL_CUSTOM_VERSION_VALUE)/hello.ko ; \
+	fi
 	$(INSTALL) -m 0644 $(@D)/misc-modules/faulty.ko $(TARGET_DIR)/usr/bin
 	$(INSTALL) -m 0644 $(@D)/scull/scull.ko $(TARGET_DIR)/usr/bin
 

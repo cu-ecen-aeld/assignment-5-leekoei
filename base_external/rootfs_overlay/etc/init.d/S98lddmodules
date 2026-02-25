@@ -2,10 +2,37 @@
 case "$1" in
     start)
         echo "Load ldd drivers..."
+        KREL="$(uname -r)"
+        # Ensure module dependency metadata exists before using modprobe.
+        if command -v depmod >/dev/null 2>&1; then
+            depmod -a "${KREL}" >/dev/null 2>&1 || depmod -a >/dev/null 2>&1
+        fi
         cd /usr/bin
         scull_load
         module_load faulty
-        aesdchar_load
+        # Prefer modprobe so validation scripts can unload/reload by name.
+        modprobe aesdchar 2>/dev/null || {
+            if [ -e "/lib/modules/${KREL}/aesdchar.ko" ]; then
+                insmod "/lib/modules/${KREL}/aesdchar.ko"
+            elif [ -e "/usr/bin/aesdchar.ko" ]; then
+                insmod "/usr/bin/aesdchar.ko"
+            else
+                aesdchar_load
+            fi
+        }
+        # Ensure device node exists as a character device. A stale regular
+        # file at /dev/aesdchar causes tests to bypass the driver.
+        if [ ! -c /dev/aesdchar ]; then
+            major="$(awk '$2=="aesdchar" {print $1}' /proc/devices | head -n1)"
+            if [ -n "${major}" ]; then
+                rm -f /dev/aesdchar
+                mknod /dev/aesdchar c "${major}" 0
+                chmod 664 /dev/aesdchar
+            else
+                echo "ERROR: aesdchar major number not found in /proc/devices"
+                exit 1
+            fi
+        fi
         modprobe hello
         ;;
     stop)
